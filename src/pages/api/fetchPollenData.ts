@@ -7,6 +7,7 @@ export async function fetchPollenData(allergen: string) {
       fetchDistrict(lat, lon, name, allergen)
     )
   );
+
   return rawData.filter(
     (item): item is NonNullable<typeof item> => item !== null
   );

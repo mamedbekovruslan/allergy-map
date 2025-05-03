@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import { Select, Layout, Typography, Spin } from "antd";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { fetchPollenData } from "@/api/fetchPollenData";
+import { fetchPollenData } from "@/pages/api/fetchPollenData";
 import { ForecastPoint } from "@/types/forecast";
 import { allergenOptions } from "@/utils/allergenOptions";
 
@@ -52,7 +52,7 @@ export default function Home({ initialAllergen, initialData }: Props) {
   return (
     <Layout>
       <Header style={{ background: "#fff", padding: 20 }}>
-        <Title level={3}>Allergy Forecast Map</Title>
+        <Title level={3}>Аллергокарта</Title>
       </Header>
       <Content style={{ padding: 20 }}>
         <Select
@@ -66,7 +66,11 @@ export default function Home({ initialAllergen, initialData }: Props) {
             </Option>
           ))}
         </Select>
-        {loading ? <Spin /> : <Map points={data} />}
+        {loading ? (
+          <Spin style={{ marginLeft: "20px" }} />
+        ) : (
+          <Map key={allergen} points={data} />
+        )}
       </Content>
     </Layout>
   );

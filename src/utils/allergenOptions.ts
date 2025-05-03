@@ -1,4 +1,8 @@
-export const allergenOptions: { label: string; value: string }[] = [
-  { label: "Берёза", value: "birch" },
-  { label: "Амброзия", value: "ragweed" },
+export const allergenOptions = [
+  { value: "birch", label: "Берёза" },
+  { value: "alder", label: "Ольха" },
+  { value: "grass", label: "Злаки" },
+  { value: "ragweed", label: "Амброзия" },
+  { value: "mugwort", label: "Полынь" },
+  { value: "weed", label: "Сорняки" },
 ];
