@@ -4,12 +4,28 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { fetchPollenData } from "@/api/fetchPollenData";
 import { ForecastPoint } from "@/types/forecast";
+import { allergenOptions } from "@/utils/allergenOptions";
 
 const { Header, Content } = Layout;
 const { Option } = Select;
 const { Title } = Typography;
 
-const Map = dynamic(() => import("@/components/PollenMap"), { ssr: false });
+const Map = dynamic(() => import("@/components/PollenMap"), {
+  ssr: false,
+  loading: () => (
+    <div
+      style={{
+        height: "600px",
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Spin size="large" />
+    </div>
+  ),
+});
 
 type Props = {
   initialAllergen: string;
@@ -44,8 +60,11 @@ export default function Home({ initialAllergen, initialData }: Props) {
           onChange={handleChange}
           style={{ width: 200, marginBottom: 20 }}
         >
-          <Option value="birch">Birch</Option>
-          <Option value="ragweed">Ragweed</Option>
+          {allergenOptions.map((option) => (
+            <Option key={option.value} value={option.value}>
+              {option.label}
+            </Option>
+          ))}
         </Select>
         {loading ? <Spin /> : <Map points={data} />}
       </Content>
