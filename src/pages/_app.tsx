@@ -1,0 +1,8 @@
+import "antd/dist/reset.css";
+import "leaflet/dist/leaflet.css";
+
+import type { AppProps } from "next/app";
+
+export default function App({ Component, pageProps }: AppProps) {
+  return <Component {...pageProps} />;
+}
