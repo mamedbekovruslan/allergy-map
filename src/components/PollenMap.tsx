@@ -1,6 +1,6 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
-import { ForecastPoint } from "@/pages";
+import { ForecastPoint } from "@/types/forecast";
 
 type Props = {
   points: ForecastPoint[];
@@ -8,11 +8,11 @@ type Props = {
 
 const getColor = (level: ForecastPoint["level"]) => {
   switch (level) {
-    case "low":
+    case "Низкий":
       return "#4caf50";
-    case "moderate":
+    case "Средний":
       return "#ff9800";
-    case "high":
+    case "Высокий":
       return "#f44336";
   }
 };
@@ -22,7 +22,8 @@ export default function Map({ points }: Props) {
     <MapContainer
       center={[55.75, 37.61]}
       zoom={10}
-      style={{ height: "600px", width: "100%" }}
+      attributionControl={false}
+      style={{ height: "88vh", width: "100%" }}
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       {points.map((point, index) => {
