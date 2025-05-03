@@ -9,10 +9,12 @@ const { Title } = Typography;
 
 const Map = dynamic(() => import("@/components/Map"), { ssr: false });
 
-type ForecastPoint = {
+export type ForecastPoint = {
   lat: number;
   lng: number;
   level: "low" | "moderate" | "high";
+  value: number;
+  name?: string;
 };
 
 type Props = {
@@ -54,20 +56,55 @@ export default function Home({ initialAllergen, initialData }: Props) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const allergen = (context.query.allergen as string) || "birch";
 
-  const cities = [
-    { name: "Moscow", lat: 55.7558, lon: 37.6176 },
-    // { name: "Berlin", lat: 52.52, lon: 13.405 },
-    // { name: "Paris", lat: 48.8566, lon: 2.3522 },
-    // { name: "New York", lat: 40.7128, lon: -74.006 },
-    // { name: "Kyiv", lat: 50.45, lon: 30.523 },
-    // { name: "Warsaw", lat: 52.2297, lon: 21.0122 },
-    // { name: "Vienna", lat: 48.2082, lon: 16.3738 },
-    // { name: "Budapest", lat: 47.4979, lon: 19.0402 },
-    // { name: "Tokyo", lat: 35.6895, lon: 139.6917 },
-    // { name: "Beijing", lat: 39.9042, lon: 116.4074 },
+  const districts = [
+    { name: "Тверской", lat: 55.765, lon: 37.605 },
+    { name: "Арбат", lat: 55.752, lon: 37.586 },
+    { name: "Пресненский", lat: 55.76, lon: 37.56 },
+    { name: "Хамовники", lat: 55.735, lon: 37.58 },
+    { name: "Басманный", lat: 55.765, lon: 37.65 },
+    { name: "Таганский", lat: 55.741, lon: 37.657 },
+    { name: "Замоскворечье", lat: 55.732, lon: 37.628 },
+    { name: "Мещанский", lat: 55.78, lon: 37.625 },
+    { name: "Красносельский", lat: 55.78, lon: 37.65 },
+    { name: "Якиманка", lat: 55.731, lon: 37.61 },
+    { name: "Беговой", lat: 55.78, lon: 37.56 },
+    { name: "Сокол", lat: 55.805, lon: 37.51 },
+    { name: "Аэропорт", lat: 55.8, lon: 37.53 },
+    { name: "Даниловский", lat: 55.698, lon: 37.63 },
+    { name: "Донской", lat: 55.7, lon: 37.6 },
+    { name: "Нагорный", lat: 55.658, lon: 37.61 },
+    { name: "Академический", lat: 55.683, lon: 37.575 },
+    { name: "Ломоносовский", lat: 55.683, lon: 37.53 },
+    { name: "Гагаринский", lat: 55.7, lon: 37.57 },
+    { name: "Раменки", lat: 55.7, lon: 37.48 },
+    { name: "Филёвский Парк", lat: 55.75, lon: 37.48 },
+    { name: "Кунцево", lat: 55.73, lon: 37.45 },
+    { name: "Строгино", lat: 55.8, lon: 37.4 },
+    { name: "Щукино", lat: 55.8, lon: 37.47 },
+    { name: "Хорошёво-Мнёвники", lat: 55.775, lon: 37.45 },
+    { name: "Митино", lat: 55.84, lon: 37.36 },
+    { name: "Северное Тушино", lat: 55.86, lon: 37.43 },
+    { name: "Южное Тушино", lat: 55.85, lon: 37.43 },
+    { name: "Марфино", lat: 55.84, lon: 37.6 },
+    { name: "Бибирево", lat: 55.88, lon: 37.6 },
+    { name: "Отрадное", lat: 55.86, lon: 37.6 },
+    { name: "Марьина Роща", lat: 55.8, lon: 37.6 },
+    { name: "Лефортово", lat: 55.77, lon: 37.7 },
+    { name: "Перово", lat: 55.75, lon: 37.78 },
+    { name: "Измайлово", lat: 55.78, lon: 37.77 },
+    { name: "Гольяново", lat: 55.82, lon: 37.8 },
+    { name: "Новогиреево", lat: 55.73, lon: 37.8 },
+    { name: "Люблино", lat: 55.67, lon: 37.75 },
+    { name: "Кузьминки", lat: 55.7, lon: 37.75 },
+    { name: "Текстильщики", lat: 55.7, lon: 37.72 },
+    { name: "Орехово-Борисово", lat: 55.61, lon: 37.74 },
+    { name: "Царицыно", lat: 55.61, lon: 37.68 },
+    { name: "Бирюлёво", lat: 55.58, lon: 37.65 },
+    { name: "Братеево", lat: 55.63, lon: 37.76 },
+    { name: "Капотня", lat: 55.64, lon: 37.79 },
   ];
 
-  const fetchCityData = async (lat: number, lon: number) => {
+  const fetchDistrictData = async (lat: number, lon: number, name: string) => {
     try {
       const res = await fetch(
         `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&hourly=${allergen}_pollen&timezone=UTC`
@@ -75,15 +112,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       const json = await res.json();
       const value = json.hourly?.[`${allergen}_pollen`]?.[0] ?? 0;
       const level = value < 10 ? "low" : value < 20 ? "moderate" : "high";
-      return { lat, lng: lon, level };
+      return { lat, lng: lon, level, name, value };
     } catch {
       return null;
     }
   };
 
   const rawData = await Promise.all(
-    cities.map(({ lat, lon }) => fetchCityData(lat, lon))
+    districts.map(({ lat, lon, name }) => fetchDistrictData(lat, lon, name))
   );
+
   const data = rawData.filter((item): item is ForecastPoint => item !== null);
 
   return {
