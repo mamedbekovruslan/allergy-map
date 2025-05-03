@@ -23,7 +23,7 @@ export default function Map({ points }: Props) {
       center={[55.75, 37.61]}
       zoom={10}
       attributionControl={false}
-      style={{ height: "600px", width: "100%" }}
+      style={{ height: "88vh", width: "100%" }}
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       {points.map((point, index) => {

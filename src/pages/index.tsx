@@ -54,11 +54,20 @@ export default function Home({ initialAllergen, initialData }: Props) {
       <Header style={{ background: "#fff", padding: 20 }}>
         <Title level={3}>Аллергокарта</Title>
       </Header>
-      <Content style={{ padding: 20 }}>
+      <Content style={{ padding: 20, backgroundColor: "white" }}>
         <Select
           value={allergen}
           onChange={handleChange}
-          style={{ width: 200, marginBottom: 20 }}
+          style={{
+            width: 200,
+            marginBottom: 20,
+            position: "absolute",
+            zIndex: "999",
+            left: "80px",
+            top: "95px",
+            border: "2px solid rgba(0, 0, 0, 0.2)",
+            borderRadius: "3px",
+          }}
         >
           {allergenOptions.map((option) => (
             <Option key={option.value} value={option.value}>
@@ -67,7 +76,17 @@ export default function Home({ initialAllergen, initialData }: Props) {
           ))}
         </Select>
         {loading ? (
-          <Spin style={{ marginLeft: "20px" }} />
+          <div
+            style={{
+              height: "600px",
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Spin style={{ marginLeft: "20px" }} />
+          </div>
         ) : (
           <Map key={allergen} points={data} />
         )}
