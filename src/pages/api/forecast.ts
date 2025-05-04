@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { fetchPollenData } from "@/pages/api/fetchPollenData";
+import { fetchPollenData } from "../../lib/fetchPollenData";
 
 export default async function handler(
   req: NextApiRequest,

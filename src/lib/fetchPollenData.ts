@@ -1,5 +1,5 @@
 import { districts } from "@/utils/districts";
-import { fetchDistrict } from "./fetchDistricts";
+import { fetchDistrict } from "../pages/api/fetchDistricts";
 
 export async function fetchPollenData(allergen: string) {
   const rawData = await Promise.all(
