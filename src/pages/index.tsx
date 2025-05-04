@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import { Select, Layout, Typography, Spin } from "antd";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import { fetchPollenData } from "@/pages/api/fetchPollenData";
+import { fetchPollenData } from "@/lib/fetchPollenData";
 import { ForecastPoint } from "@/types/forecast";
 import { allergenOptions } from "@/utils/allergenOptions";
 
@@ -16,7 +16,6 @@ const Map = dynamic(() => import("@/components/PollenMap"), {
     <div
       style={{
         height: "600px",
-        width: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
